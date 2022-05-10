@@ -10,6 +10,9 @@ namespace todoapp.Data
 
         }
         public DbSet<Card> cards {get; set;}
-
+        public DbSet<User> users { get; set; }
+     
+        
+      
     }
 }

@@ -28,6 +28,9 @@ namespace todoapp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("cardDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,7 +45,40 @@ namespace todoapp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("cards");
+                });
+
+            modelBuilder.Entity("todoapp.models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("users");
+                });
+
+            modelBuilder.Entity("todoapp.models.Card", b =>
+                {
+                    b.HasOne("todoapp.models.User", null)
+                        .WithMany("cards")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("todoapp.models.User", b =>
+                {
+                    b.Navigation("cards");
                 });
 #pragma warning restore 612, 618
         }

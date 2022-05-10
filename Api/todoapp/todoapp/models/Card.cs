@@ -9,7 +9,7 @@ namespace todoapp.models
         public string cardName { get; set; }
         public string cardDescription { get; set; }
         public string cardImportance { get; set; }
-        
+        public Guid UserId { get; internal set; }
     }
 }
  

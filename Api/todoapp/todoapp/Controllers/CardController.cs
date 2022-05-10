@@ -35,6 +35,7 @@ namespace todoapp.Controllers
         }
 
         [HttpPost]
+      
         public async Task<IActionResult> AddCard([FromBody] Card card)
         {
 
@@ -43,7 +44,6 @@ namespace todoapp.Controllers
             await cardDbContext.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCard), new { id = card.Id }, card);
         }
-
 
         [HttpPut]
         [Route("{id:guid}")]
@@ -63,7 +63,6 @@ namespace todoapp.Controllers
                 return NotFound("card not found");
             }
         }
-
 
         [HttpDelete]
         [Route("{id:guid}")]
