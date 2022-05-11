@@ -14,6 +14,9 @@ namespace todoapp.Controllers
         {
             this.cardDbContext = cardDbContext;
         }
+       
+
+
         [HttpGet]
         public async Task<IActionResult> GetAllCards()
         {
@@ -22,9 +25,9 @@ namespace todoapp.Controllers
             return Ok(cards);
         }
         [HttpGet]
-        [Route("{id:guid}")]
+        [Route("{id}")]
         [ActionName("GetCard")]
-        public async Task<IActionResult> GetCard([FromRoute] Guid id)
+        public async Task<IActionResult> GetCard([FromRoute] string id)
         {
             var card = await cardDbContext.cards.FirstOrDefaultAsync(x => x.Id == id);
             if (card != null)
@@ -35,19 +38,23 @@ namespace todoapp.Controllers
         }
 
         [HttpPost]
-      
         public async Task<IActionResult> AddCard([FromBody] Card card)
         {
 
-            card.Id = Guid.NewGuid();
+            card.Id = Guid.NewGuid().ToString();
+            var user = await cardDbContext.users.FirstOrDefaultAsync(x => x.Id == card.userId);
+            if (user == null) {
+                return NotFound("User id Invalid");
+            };
+            
             await cardDbContext.cards.AddAsync(card);
             await cardDbContext.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCard), new { id = card.Id }, card);
         }
 
         [HttpPut]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateCard([FromRoute] Guid id, [FromBody] Card card)
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateCard([FromRoute] string id, [FromBody] Card card)
         {
             var c = await cardDbContext.cards.FirstOrDefaultAsync(x => x.Id == id);
             if (c != null)
@@ -65,8 +72,8 @@ namespace todoapp.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> DeleteCard([FromRoute] Guid id)
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteCard([FromRoute] string id)
         {
             var c = await cardDbContext.cards.FirstOrDefaultAsync(x => x.Id == id);
             if (c != null)
